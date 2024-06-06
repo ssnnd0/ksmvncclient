@@ -262,9 +262,9 @@ const UI = {
         UI.initSetting('show_dot', false);
         UI.initSetting('path', 'websockify');
         UI.initSetting('repeaterID', '');
-        UI.initSetting('reconnect', false);
-        UI.initSetting('reconnect_delay', 5000);
-        UI.initSetting('idle_disconnect', 20);
+        UI.initSetting('reconnect', true);
+        UI.initSetting('reconnect_delay', 1000);
+        UI.initSetting('idle_disconnect', 60);
         UI.initSetting('prefer_local_cursor', true);
         UI.initSetting('toggle_control_panel', false);
         UI.initSetting('enable_perf_stats', false);
@@ -1508,7 +1508,10 @@ const UI = {
             //send a keep alive within a window that we control
             UI._sessionTimeoutInterval = setInterval(function() {
 
-                const timeSinceLastActivityInS = (Date.now() - UI.rfb.lastActiveAt) / 1000;
+                var timeSinceLastActivityInS = 0;
+                if(UI.rfb && UI.rfb.lastActiveAt){
+                    timeSinceLastActivityInS =  (Date.now() - UI.rfb.lastActiveAt) / 1000;
+                }
                 let idleDisconnectInS = 1200; //20 minute default 
                 if (Number.isFinite(parseFloat(UI.rfb.idleDisconnect))) {
                     idleDisconnectInS = parseFloat(UI.rfb.idleDisconnect) * 60;
@@ -1617,7 +1620,7 @@ const UI = {
             } else {
                 UI.showStatus(_("Failed to connect to server"), 'error');
             }
-        } else if (UI.getSetting('reconnect', false) === true && !UI.inhibitReconnect) {
+        } else if (UI.getSetting('reconnect', true) === true && !UI.inhibitReconnect) {
             UI.updateVisualState('reconnecting');
 
             const delay = parseInt(UI.getSetting('reconnect_delay'));
