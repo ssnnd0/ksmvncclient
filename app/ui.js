@@ -1508,19 +1508,22 @@ const UI = {
             //send a keep alive within a window that we control
             UI._sessionTimeoutInterval = setInterval(function() {
 
-                var timeSinceLastActivityInS = 0;
-                if(UI.rfb && UI.rfb.lastActiveAt){
-                    timeSinceLastActivityInS =  (Date.now() - UI.rfb.lastActiveAt) / 1000;
-                }
-                let idleDisconnectInS = 1200; //20 minute default 
-                if (Number.isFinite(parseFloat(UI.rfb.idleDisconnect))) {
-                    idleDisconnectInS = parseFloat(UI.rfb.idleDisconnect) * 60;
-                }
+                // var timeSinceLastActivityInS = 0;
+                // if(UI.rfb && UI.rfb.lastActiveAt){
+                //     timeSinceLastActivityInS =  (Date.now() - UI.rfb.lastActiveAt) / 1000;
+                // }
+                // // let idleDisconnectInS = 1200; //20 minute default 
+                // // if (Number.isFinite(parseFloat(UI.rfb.idleDisconnect))) {
+                // //     idleDisconnectInS = parseFloat(UI.rfb.idleDisconnect) * 60;
+                // // }
 
-                if (timeSinceLastActivityInS > idleDisconnectInS) {
-                    parent.postMessage({ action: 'idle_session_timeout', value: 'Idle session timeout exceeded'}, '*' );
-                } else {
-                    //send keep-alive
+                // if (timeSinceLastActivityInS > idleDisconnectInS) {
+                //     parent.postMessage({ action: 'idle_session_timeout', value: 'Idle session timeout exceeded'}, '*' );
+                // } else {
+                //     //send keep-alive
+                //     UI.rfb.sendKey(1, null, false);
+                // }
+                if(UI.rfb){
                     UI.rfb.sendKey(1, null, false);
                 }
             }, 5000);
